@@ -2,9 +2,6 @@
 
 DESCRIPTION:
 
-
-// TEST
-
 Helioviewer.org is a web application visualization tool for solar physics data
 based on the JPEG 2000 image compression standard.
 
