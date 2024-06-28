@@ -19,44 +19,45 @@ jobs:
 
     runs-on: ${{matrix.os}}
     steps:
-    - name: Checkout the code under test
-      uses: actions/checkout@v4
-      with:
-        submodules: true
-        path: 'helioviewer.org'
-    - name: Checkout the latest Helioviewer API
-      uses: actions/checkout@v4
-      with:
-        repository: 'Helioviewer-Project/api'
-        path: 'api'
-    # See https://github.com/actions/checkout?tab=readme-ov-file#fetch-only-a-single-file
-    - name: Checkout the Dockerfile for local Helioviewer
-      uses: actions/checkout@v4
-      with:
-        repository: 'Helioviewer-Project/helioviewer.org-docker'
-        path: 'compose'
-        sparse-checkout: |
-          compose.yaml
-          .env.example
-        sparse-checkout-cone-mode: false
-    - name: Print current directory
-      run: |
-        echo $(pwd)
-        echo $(ls)
-    - name: Setup environment file
-      run: mv compose/.env.example .env
-    - name: Make writeable configuration files
-      run: |
-        touch api/install/settings/settings.cfg
-        chmod o+rw api/install/settings/settings.cfg
-        touch api/settings/Config.ini
-        chmod o+rw api/settings/Config.ini
-        touch api/settings/Config.php
-        chmod o+rw api/settings/Config.php
+    # - name: Checkout the code under test
+    #   uses: actions/checkout@v4
+    #   with:
+    #     submodules: true
+    #     path: 'helioviewer.org'
+    # - name: Checkout the latest Helioviewer API
+    #   uses: actions/checkout@v4
+    #   with:
+    #     repository: 'Helioviewer-Project/api'
+    #     path: 'api'
+    # # See https://github.com/actions/checkout?tab=readme-ov-file#fetch-only-a-single-file
+    # - name: Checkout the Dockerfile for local Helioviewer
+    #   uses: actions/checkout@v4
+    #   with:
+    #     repository: 'Helioviewer-Project/helioviewer.org-docker'
+    #     path: 'compose'
+    #     sparse-checkout: |
+    #       compose.yaml
+    #       .env.example
+    #     sparse-checkout-cone-mode: false
+    # - name: Print current directory
+    #   run: |
+    #     echo $(pwd)
+    #     echo $(ls)
+    # - name: Setup environment file
+    #   run: mv compose/.env.example .env
+    # - name: Make writeable configuration files
+    #   run: |
+    #     touch api/install/settings/settings.cfg
+    #     chmod o+rw api/install/settings/settings.cfg
+    #     touch api/settings/Config.ini
+    #     chmod o+rw api/settings/Config.ini
+    #     touch api/settings/Config.php
+    #     chmod o+rw api/settings/Config.php
     - name: Start local Helioviewer environment
       id: docker
       run: |
-        cat C:\ProgramData\Docker\config\daemon.json
-        mv compose/compose.yaml .
-        docker compose pull --platform=linux
+        & $Env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchDaemon
+        # cat C:\ProgramData\Docker\config\daemon.json
+        # mv compose/compose.yaml .
+        # docker compose pull --platform=linux
         # docker compose up -d --wait
