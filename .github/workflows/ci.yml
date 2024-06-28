@@ -56,6 +56,8 @@ jobs:
     - name: Start local Helioviewer environment
       id: docker
       run: |
+        cd 'C:\Program Files\Docker\Docker'
+        ./DockerCli.exe -SwitchDaemon
         mv compose/compose.yaml .
         docker compose pull --platform=linux
         # docker compose up -d --wait
