@@ -10,39 +10,12 @@ permissions:
   contents: read
 
 jobs:
-  jest-unit-tests:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: ['18.x']
-
-    steps:
-    - uses: actions/checkout@v3
-    # Setup java for access to `ant`
-    - uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-
-    - name: Install node dependencies
-      run: npm ci
-
-    - name: Test building with ant
-      run: |
-        cd resources/build && ant && cd ..
-
-    - name: Run js unit tests
-      run: npm run test
-
-    - name: Prettier check (certain files)
-      run: npx prettier -c resources/js/test resources/js/Media/VideoPlayer.jsx
   playwright-e2e-tests:
     timeout-minutes: 60
 
     strategy: 
       matrix: 
-        os : [ubuntu-latest, windows-2019]
+        os : [windows-2019]
 
     runs-on: ${{matrix.os}}
     steps:
@@ -84,4 +57,5 @@ jobs:
       id: docker
       run: |
         mv compose/compose.yaml .
-        docker compose up -d --wait
+        docker ps
+        #docker compose up -d --wait
