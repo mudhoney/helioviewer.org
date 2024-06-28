@@ -63,6 +63,7 @@ jobs:
         distribution: Ubuntu-22.04
         use-cache: 'true'
     - name: Start local Helioviewer environment
+      uses: Vampire/setup-wsl@v3
       id: docker
       run: |
         mv compose/compose.yaml .
