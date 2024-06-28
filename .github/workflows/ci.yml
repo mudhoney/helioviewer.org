@@ -65,6 +65,5 @@ jobs:
     - name: Start local Helioviewer environment
       id: docker
       run: |
-        mv compose/compose.yaml .
-        docker compose pull
+        docker run --rm php echo test
         # docker compose up -d --wait
