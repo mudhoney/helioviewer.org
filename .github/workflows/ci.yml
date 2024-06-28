@@ -56,7 +56,7 @@ jobs:
     - name: Start local Helioviewer environment
       id: docker
       run: |
-        docker pull --platform linux php
+        cat C:\ProgramData\Docker\config\daemon.json
         mv compose/compose.yaml .
         docker compose pull --platform=linux
         # docker compose up -d --wait
