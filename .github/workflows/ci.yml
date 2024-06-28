@@ -55,8 +55,8 @@ jobs:
     #     chmod o+rw api/settings/Config.php
     - name: Setup ws
       uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-22.04
+      with:
+        distribution: Ubuntu-22.04
     - name: Start local Helioviewer environment
       id: docker
       run: |
