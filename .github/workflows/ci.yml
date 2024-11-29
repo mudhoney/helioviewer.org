@@ -62,7 +62,12 @@ jobs:
       fail-fast: false
 
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+
+    strategy: 
+      matrix: 
+        os : [ubuntu-latest, windows-2019]
+
+    runs-on: ${{matrix.os}}
     steps:
     - name: Checkout the code under test
       uses: actions/checkout@v4
