@@ -142,24 +142,14 @@
 	} else {
 	?>
 		<link rel="stylesheet" href="/resources/compressed/helioviewer.min.css?v=<?=filemtime('resources/compressed/helioviewer.min.css')?>" />
-		<!-- Google Analytics -->
-		<script type="text/javascript">
-			var _gaq = _gaq || [];
-			_gaq.push(['_setAccount', 'UA-20263053-1']);
-			_gaq.push(['_trackPageview']);
-			_gaq.push(['_trackPageLoadTime']);
-
-			(function() {
-				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-			}) ();
-		</script>
 	<?php
 	}
 	?>
 	<script type="text/javascript">var outputType = <?php if($outputType){ echo "'".$outputType."'"; } else { echo 'false'; }?>;</script>
-
+	<?php /* 3d.css is not in the bundler because our current bundler doesn't */ ?>
+	<?php /* guarantee any particular order... which is pretty bad for the    */ ?>
+	<?php /* "cascading" part of CSS. Which is needed for this 3d.css         */ ?>
+	<link rel="stylesheet" href="/resources/css/3d.css" />
 <?php
 if(isset($_SERVER['HTTP_USER_AGENT'])) {
 	if(strpos($_SERVER['HTTP_USER_AGENT'],'Phone')|strpos($_SERVER['HTTP_USER_AGENT'],'Android')|strpos($_SERVER['HTTP_USER_AGENT'],'iPad')) {
@@ -242,7 +232,7 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 		</li>
 
 
-		<li>
+		<li class="toggle3d">
 			<table class="hvmobmenu_table" cellpadding="0" cellspacing="0" border="0">
 				<td class="hvmobmenu_left_td">
 					<span class="hvmobmenuitems" drawersec="hv-drawer-movies">
@@ -255,7 +245,7 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 			</table>
 		</li>
 
-		<li>
+		<li class="toggle3d">
 			<table class="hvmobmenu_table" cellpadding="0" cellspacing="0" border="0">
 				<td class="hvmobmenu_left_td">
 					<span class="hvmobmenuitems" drawersec="hv-drawer-screenshots">
@@ -382,7 +372,6 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 
 <!-- END mobile menu -->
 
-
 <!-- START Mobile toolbar -->
 
 <div id="hvmobscale_div"></div>
@@ -408,13 +397,13 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 				<br><span>Images &amp;<span class="hvmobbs_br"><br></span> Layers</span>
 			</a>
 		</td>
-		<td class="hvmobds_td">
+		<td class="hvmobds_td toggle3d">
 			<a class="hvmobdstabs" drawersec="accordion-events">
 				<img class="hvmobds_icon" src="https://develop.helioviewer.org/resources/images/mobile/events_icon1.png" alt="Events icon">
 				<br><span>Features &amp;<span class="hvmobbs_br"><br></span> Events</span>
 			</a>
 		</td>
-		<td class="hvmobds_td">
+		<td class="hvmobds_td toggle3d">
 			<a class="hvmobdstabs" drawersec="accordion-bodies">
 				<img class="hvmobds_icon" src="https://develop.helioviewer.org/resources/images/mobile/celestial_icon2.png" alt="Celestial Bodies icon">
 				<br><span>Celestial<span class="hvmobbs_br"><br></span> Bodies</span>
@@ -519,8 +508,7 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 				</h1>
 			</div>
 
-			<div id="zoom">
-
+			<div id="zoom" class="toggle3d">
 				<!--  Zoom Controls -->
 				<div id="zoomControls" style="display: none;">
 					<div id="zoomControlZoomIn" title="Zoom in." style="display: none;">+</div>
@@ -530,48 +518,53 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 					<div id="zoomControlZoomOut" title="Zoom out." style="display: none;">-</div>
 				</div>
 
-				<div id="center-button" class="viewport-action fa fa-crosshairs" title="Center the Sun in the Viewport"></div>
+				<div id="center-button" class="toggle3d viewport-action fa fa-crosshairs" title="Center the Sun in the Viewport"></div>
 
 				<div id="zoom-out-button" class="viewport-action fa fa-search-minus" title="Zoom Out"></div>
 
 				<div id="zoom-in-button" class="viewport-action fa fa-search-plus" title="Zoom In"></div>
+			</div>
+			<div class="viewport-action js-3d-toggle desktop js-mobile-3d">
+				<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" style="position: absolute;left: 0px;top: 0;">
+					<!-- Plain circle with transparent background - no stroke -->
+					<circle cx="50" cy="50" r="45" fill="transparent"></circle>
 
+					<!-- Centered 3D Text - Simple version with perfect centering -->
+					<g transform="translate(47,50)">
+					<!-- Main text in black with perfect centering -->
+					<text x="0" y="0" stroke-width="0.3" font-family="Arial Black, Impact, sans-serif" font-size="55" font-weight="bold" text-anchor="middle" dominant-baseline="central" transform="skewX(-10) translate(3,0)" fill="currentColor" stroke="currentColor">3D</text>
+					</g>
+				</svg>
 			</div>
 
+
 			<div id="menus">
-
-				<div class="left">
-
+				<div>
 					<div id="news-button" class="fa fa-rss fa-fw qtip-left social-button" title="Helioviewer Project Announcements."></div>
 
 					<div id="youtube-button" class="fa fa-fw qtip-left" title="View Helioviewer Movies Shared to YouTube."></div>
 
-					<div id="movies-button" class="fa fa-file-video-o fa-fw qtip-left social-button" title="Create a Helioviewer Movie."></div>
+					<div id="movies-button" class="toggle3d fa fa-file-video-o fa-fw qtip-left social-button" title="Create a Helioviewer Movie."></div>
 
-					<a id="screenshots-button" class="fa fa-file-picture-o fa-fw qtip-left social-button" title="Download a screenshot of the current Helioviewer Viewport."></a>
+					<a id="screenshots-button" class="toggle3d fa fa-file-picture-o fa-fw qtip-left social-button" title="Download a screenshot of the current Helioviewer Viewport."></a>
 
 					<a id="data-button" class="fa fa-file-code-o fa-fw qtip-left social-button" title="Request Science Data Download from External Partners."></a>
 
 					<div id="share-button" class="fa fa-share-square-o fa-fw qtip-left social-button" title="Share the current viewport on social media."></div>
-				</div>
 
-				<div class="right" style="margin-right: 0.5em;">
 					<div id="help-button" class="fa fa-question fa-fw qtip-left" href="" style="margin-left: 0.5em;" title="Get Help with Helioviewer."></div>
 
 					<div id="settings-button" class="fa fa-cog fa-fw qtip-left" title="Edit Settings &amp; Defaults."></div>
 				</div>
-
 			</div>
 
 
 			<div id="scale">
-
-				<div id="earth-button" class="viewport-action segmented-left fa fa-globe" title="Toggle Earth-Scale Indicator."></div><div id="scalebar-button" class="viewport-action segmented-right fa fa-arrows-h" style="border-left: 0;" title="Toggle Length scale indicator."></div>
-
+				<div id="earth-button" class="toggle3d viewport-action segmented-left fa fa-globe" title="Toggle Earth-Scale Indicator."></div><div id="scalebar-button" class="toggle3d viewport-action segmented-right fa fa-arrows-h" style="border-left: 0;" title="Toggle Length scale indicator."></div>
 			</div>
 
 			<!-- Mouse coordinates display -->
-			<div id="mouse-coords-box">
+			<div id="mouse-coords-box" class="toggle3d">
 				<div id="mouse-coords">
 					<div id="js-coord-help" class="coord-notice" rel="/dialogs/mouse_coordinates.html"><span class="fa fa-info"></span></div>
 					<div class="mouse-coordinate-labels">
@@ -583,7 +576,7 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 						<span><span id="mouse-coords-y"></span><span class="mouse-unit" id="js-unit-2"></span></span>
 					</div>
 				</div>
-				<div id="mouse-cartesian" style="margin-top:4px;" class="viewport-action segmented-left fa fa-cube" title="Toggle Mouse Coordinates (Cartesian)"></div><div id="mouse-polar" class="viewport-action segmented-right fa fa-dot-circle-o" style="border-left: 0;margin-top:4px;" title="Toggle Mouse Coordinates (Polar)"></div>
+				<div id="mouse-cartesian" style="margin-top:4px;" class="toggle3d viewport-action segmented-left fa fa-cube" title="Toggle Mouse Coordinates (Cartesian)"></div><div id="mouse-polar" class="viewport-action segmented-right fa fa-dot-circle-o" style="border-left: 0;margin-top:4px;" title="Toggle Mouse Coordinates (Polar)"></div>
 			</div>
 
 		</div>
@@ -666,7 +659,7 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 					</div>
 				</div>
 
-				<div id="accordion-events" class="accordion">
+				<div id="accordion-events" class="accordion toggle3d">
 					<div class="header">
 						<div class="disclosure-triangle closed">►</div>
 						<h1>Features and Events</h1>
@@ -674,11 +667,15 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 					</div>
 					<div class="content">
 						<div id="eventLayerAccordion">
-							<div id="EventLayerAccordion-Container"></div>
+							<div id="EventLayerAccordion-Container">
+								<div id="event-tree-container-HEK"></div>
+								<div id="event-tree-container-CCMC"></div>
+								<div id="event-tree-container-RHESSI"></div>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div id="accordion-bodies" class="accordion">
+				<div id="accordion-bodies" class="accordion toggle3d">
 					<div class="header">
 						<div class="disclosure-triangle closed">►</div>
 						<h1>Celestial Bodies</h1>
@@ -1213,7 +1210,7 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 
 								<div class='social-btns'>
 									<div style="font-size: 1.5em;">
-										<div id='help-links-tutorial' onclick="startTutorial();" class='text-btn qtip-left' style="width: 90%;border:none;" title="Interactive Tutorial" rel="/dialogs/about.php">
+										<div id='help-links-tutorial' onclick="startTutorial();" class='toggle3d text-btn qtip-left' style="width: 90%;border:none;" title="Interactive Tutorial" rel="/dialogs/about.php">
 											<span class='fa fa-compass fa-fw'></span>
 											<span style='line-height: 1.6em'>Interactive Tutorial</span>
 										</div>
@@ -1362,7 +1359,7 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 			</div>
 		</div>
 
-		<div id="hv-drawer-tab-timeline-events" class="drawer-tab drawer-tab-bottom">Events Timeline</div>
+		<div id="hv-drawer-tab-timeline-events" class="drawer-tab drawer-tab-bottom">HEK Events Timeline</div>
 		<div id="hv-drawer-timeline-events" class="helioviewer-drawer-bottom">
 			<div class="drawer-contents" style="height:350px;">
 				<div id="hv-drawer-timeline-events-logarithmic-holder" style="display:none;position:absolute;top:10px;left:10px;z-index:5;"><input aria-labelledby="hv-drawer-timeline-events-logarithmic-holder" type="checkbox" id="hv-drawer-timeline-events-logarithmic"> Logarithmic View</div>
@@ -1384,7 +1381,7 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 		<div id='about-dialog'></div>
 
 		<!-- Mouse coordinates dialog -->
-		<div id='mouse-coords-dialog' class="dialog"></div>
+		<div id='mouse-coords-dialog' class="dialog toggle3d"></div>
 
 		<!-- Layer choice dialog -->
 		<div id='layer-choice-dialog'></div>
@@ -1531,13 +1528,13 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 
 					<div>
 			<!--<div id="youtube-button" class="fa fa-youtube fa-fw qtip-left social-button" title="View Helioviewer Movies Shared to YouTube."></div>-->
-			<div id="movies-button" class="fa fa-file-video-o fa-fw qtip-left social-button" title="Create a Helioviewer Movie."></div>
-			<div id="screenshots-button" class="fa fa-file-picture-o fa-fw qtip-left social-button" title="Download a screenshot of the current Helioviewer Viewport."></div>
+			<div id="movies-button" class="toggle3d fa fa-file-video-o fa-fw qtip-left social-button" title="Create a Helioviewer Movie."></div>
+			<div id="screenshots-button" class="toggle3d fa fa-file-picture-o fa-fw qtip-left social-button" title="Download a screenshot of the current Helioviewer Viewport."></div>
 						<a id= "help-anchor" target="_blank" href="https://helioviewer.org"><div id="help-button" class="fa fa-question fa-fw qtip-left social-button" title="Get Help with Helioviewer."></div></a>
 					</div>
 			</div>
 
-			<div id="zoom">
+			<div id="zoom" class="toggle3d">
 				<!--  Zoom Controls -->
 				<div id="zoomControls">
 					<div id="center-button" class="viewport-action fa fa-crosshairs" title="Center the Sun in the Viewport"></div>
@@ -1590,16 +1587,71 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 										</div>
 									</div>
 									<div class="row">
+
+
 										<div id="observation-label" class="label" style="margin-top:0.4em;">Make an Observation</div>
 										<div id="image-layer-select-container" class="field" style="margin-top:0.95em; padding-bottom:0.5em;">
 											<select aria-labelledby="observation-label" id="image-layer-select" name="image-select-layers" style="width:18.5em;">
-												<option value="0" class="image-layer-switch" data-id="0" data-name="NOAA flares and active regions" data-date="" data-layers="[SDO,AIA,171,1,100,0,60,1,2017-11-16T09:02:20.000Z]" data-events="[AR,NOAA_SWPC_Observer,1],[FL,SWPC,1]">Flares and Active Regions</option>
-												<option value="1" class="image-layer-switch" data-id="1" data-name="Eruption Monitor" data-date="" data-layers="[SDO,AIA,304,1,100,0,60,1,2017-11-16T09:02:20.000Z],[SOHO,LASCO,C2,white-light,1,100,0,60,1,2017-05-18T15:35:00.000Z],[SOHO,LASCO,C3,white-light,1,100,0,60,1,2017-05-18T15:35:00.000Z]" data-events="[CE,all,1],[ER,all,1],[FI,all,1],[FA,all,1],[FE,all,1]">Eruptions and CMEs</option>
-												<option value="2" class="image-layer-switch" data-id="2" data-name="Magnetic flux Monitor" data-date="" data-layers="[SDO,HMI,magnetogram,1,100,0,60,1,2017-11-16T09:02:20.000Z]" data-events="[EF,all,1]">Magnetic Field</option>
-												<option value="3" class="image-layer-switch" data-id="3" data-name="Coronal hole Monitor" data-date="" data-layers="[SDO,AIA,211,1,100,0,60,1,2017-11-16T09:02:20.000Z]" data-events="[CH,all,1]">Coronal Holes</option>
-												<option value="4" class="image-layer-switch" data-id="4" data-name="Sunspots" data-date="" data-layers="[SDO,HMI,continuum,1,100,0,60,1,2017-11-16T09:02:20.000Z]" data-events="[SS,all,1]">Sunspots</option>
+												<option value="0" class="image-layer-switch"
+													data-id="0"
+													data-name="NOAA flares and active regions"
+													data-date=""
+													data-layers="[SDO,AIA,171,1,100,0,60,1,2017-11-16T09:02:20.000Z]"
+													data-events="[AR,NOAA_SWPC_Observer,1],[FL,SWPC,1]"
+												>
+													Flares and Active Regions
+												</option>
+												<option value="1" class="image-layer-switch"
+													data-id="1"
+													data-name="Eruption Monitor"
+													data-date=""
+													data-layers="[SDO,AIA,304,1,100,0,60,1,2017-11-16T09:02:20.000Z],[SOHO,LASCO,C2,white-light,1,100,0,60,1,2017-05-18T15:35:00.000Z],[SOHO,LASCO,C3,white-light,1,100,0,60,1,2017-05-18T15:35:00.000Z]"
+													data-events="[CE,all,1],[ER,all,1],[FI,all,1],[FA,all,1],[FE,all,1]"
+												>
+													Eruptions and CMEs
+												</option>
+												<option value="2" class="image-layer-switch"
+													data-id="2"
+													data-name="Magnetic flux Monitor"
+													data-date=""
+													data-layers="[SDO,HMI,magnetogram,1,100,0,60,1,2017-11-16T09:02:20.000Z]"
+													data-events="[EF,all,1]"
+												>
+													Magnetic Field
+												</option>
+												<option value="3" class="image-layer-switch"
+													data-id="3"
+													data-name="Coronal hole Monitor"
+													data-date=""
+													data-layers="[SDO,AIA,211,1,100,0,60,1,2017-11-16T09:02:20.000Z]"
+													data-events="[CH,all,1]"
+												>
+													Coronal Holes
+												</option>
+												<option value="4" class="image-layer-switch"
+													data-id="4"
+													data-name="Sunspots"
+													data-date=""
+													data-layers="[SDO,HMI,continuum,1,100,0,60,1,2017-11-16T09:02:20.000Z]"
+													data-events="[SS,all,1]"
+												>
+													Sunspots
+												</option>
+												<option value="5" class="image-layer-switch"
+													data-id="5"
+													data-name="Solar Flare Predictions"
+													data-date=""
+													data-layers="[SDO,AIA,171,1,100,0,60,1,2017-11-16T09:02:20.000Z]"
+													data-events="[FP,all,1]"
+												>
+													Solar Flare Predictions
+												</option>
 											</select>
+											<div  data-events-visible="true" id="k12-events-visibility-btn" class="k12-eventsVisBtn" title="Toggle visibility of event marker pins" style="display: flex;cursor: pointer;">
+												<span class="fa fa-eye fa-fw layerManagerBtn visible" id="visibilityBtn" title="Toggle visibility of event marker pins" style="margin-top:0.5em;"></span>
+												<p id="k12-events-btn-text" style="margin-left:0.3em;">EVENTS ARE ON<p>
 											</div>
+										</div>
 										<div class="clear clearfix" style="display:block;clear:both;"></div>
 									</div>
 								</div>
@@ -1811,7 +1863,7 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 
 
 		<?php } else { ?>
-			<div id="zoom" style="width:70px;height:400px;">
+			<div id="zoom" style="width:70px;height:400px;" class="toggle3d">
 				<!--  Zoom Controls -->
 				<div id="zoomControls">
 					<div id="center-button" class="viewport-action fa fa-crosshairs" title="Center the Sun in the Viewport"></div>
@@ -1830,19 +1882,24 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 
 	<!-- Viewport -->
 	<div id="helioviewer-viewport-container-outer" class="user-select-none">
-		<div id="helioviewer-viewport-container-inner">
-			<div id="helioviewer-viewport">
+		<div id="helioviewer-viewport-container-inner" style="z-index: 0;">
+
+			<!-- Message console -->
+			<div id="message-console"></div>
+
+			<!-- 3D Viewport -->
+			<div id="view-3d" style="z-index: -10;"></div>
+
+			<!-- 2D Viewport -->
+			<div id="helioviewer-viewport" style="z-index: -5;">
                 <!-- START mobile touchscreen viewport div -->
-                <div id="toptouchlayer" style=""></div>
+                <div id="toptouchlayer"></div>
                  <!-- END mobile touchscreen viewport div -->
 
 				<!-- Movement sandbox -->
 				<div id="sandbox" style="position: absolute;">
 					<div id="moving-container"></div>
 				</div>
-
-				<!-- Message console -->
-				<div id="message-console"></div>
 
 				<!-- Image area select boundary container -->
 				<div id="image-area-select-container"></div>
@@ -1912,22 +1969,12 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 		<script src="/resources/js/Utility/UserSettings.js?v=<?=$debugTime?>" type="text/javascript"></script>
 		<script src="/resources/js/Utility/Tutorial.js?v=<?=$debugTime?>" type="text/javascript"></script>
 		<script src="/resources/js/Tiling/Manager/LayerManager.js?v=<?=$debugTime?>" type="text/javascript"></script>
-		<script src="/resources/js/Events/SelectedEventsCache.js?v=<?=$debugTime?>" type="text/javascript"></script>
-		<script src="/resources/js/Events/EventManager.js?v=<?=$debugTime?>" type="text/javascript"></script>
-		<script src="/resources/js/Events/EventType.js?v=<?=$debugTime?>" type="text/javascript"></script>
-		<script src="/resources/js/Events/EventTree.js?v=<?=$debugTime?>" type="text/javascript"></script>
-		<script src="/resources/js/Events/EventFeatureRecognitionMethod.js?v=<?=$debugTime?>" type="text/javascript"></script>
-		<script src="/resources/js/Events/EventLayerManager.js?v=<?=$debugTime?>" type="text/javascript"></script>
-		<script src="/resources/js/Events/EventLayerManager.js?v=<?=$debugTime?>" type="text/javascript"></script>
-		<script src="/resources/js/Events/HelioviewerEventLayer.js?v=<?=$debugTime?>" type="text/javascript"></script>
-		<script src="/resources/js/Events/HelioviewerEventLayerManager.js?v=<?=$debugTime?>" type="text/javascript"></script>
 		<script src="/resources/js/UI/TreeSelect.js?v=<?=$debugTime?>" type="text/javascript"></script>
 		<script src="/resources/js/UI/ImageSelectTool.js?v=<?=$debugTime?>" type="text/javascript"></script>
 		<script src="/resources/js/Media/MediaManager.js?v=<?=$debugTime?>" type="text/javascript"></script>
 		<script src="/resources/js/Media/MovieManager.js?v=<?=$debugTime?>" type="text/javascript"></script>
 		<script src="/resources/js/Media/ScreenshotManager.js?v=<?=$debugTime?>" type="text/javascript"></script>
 		<script src="/resources/js/UI/TileLayerAccordion.js?v=<?=$debugTime?>" type="text/javascript"></script>
-		<script src="/resources/js/UI/EventLayerAccordion.js?v=<?=$debugTime?>" type="text/javascript"></script>
 		<script src="/resources/js/UI/MessageConsole.js?v=<?=$debugTime?>" type="text/javascript"></script>
 		<script src="/resources/js/UI/TimeControls.js?v=<?=$debugTime?>" type="text/javascript"></script>
 		<script src="/resources/js/Utility/FullscreenControl.js?v=<?=$debugTime?>" type="text/javascript"></script>
@@ -2064,8 +2111,10 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 			Helioviewer.dataType = "json";
 			Helioviewer.root = serverSettings['rootURL'];
 			Helioviewer.messageConsole = new MessageConsole();
-			Helioviewer.outputType = "<?php echo $outputType; ?>";
+			Helioviewer.outputType = "<?php echo $outputType ? $outputType : "normal"; ?>";
 			Helioviewer.debug = <?php echo $debug ? 'true' : 'false'; ?>;
+			Helioviewer.mobile = <?php echo isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'],'Phone')|strpos($_SERVER['HTTP_USER_AGENT'],'Android')|strpos($_SERVER['HTTP_USER_AGENT'],'iPad')) ? 'true' : 'false'; ?>
+
 
 
 			const loadHelioviewer = (userSettings) => {
@@ -2075,13 +2124,28 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 				// Initialize Helioviewer.org
 				helioviewerWebClient = new HelioviewerWebClient(zoomLevels);
 
+				Helioviewer.webClient = helioviewerWebClient;
+
 				// Play movie if id is specified
 				if (urlSettings.movieId) {
-					helioviewerWebClient.loadMovie(urlSettings.movieId);
+					Helioviewer.webClient.loadMovie(urlSettings.movieId);
 				}
 
-				$(document).trigger("helioviewer-ready", [true]);
+				// Defined in hv3d.js, initialize the 3D viewport
+				if (Helioviewer.outputType === "normal") {
+					Init3D(serverSettings.coordinator_url, serverSettings.apiURL);
+				}
 
+				Helioviewer.eventLoader = FullEventLoader.make(Helioviewer.outputType, Helioviewer.debug)
+
+				Helioviewer.eventLoader.ready(el => {
+					if(el.error != null) {
+						console.error(el.error)
+						Helioviewer.messageConsole.warn("We couldn't load Helioviewer Events");
+					}
+				})
+
+				$(document).trigger("helioviewer-ready", [true]);
 			};
 
 			// Either load state from backend or use regular flow to load it
@@ -2098,5 +2162,6 @@ if(isset($_SERVER['HTTP_USER_AGENT'])) {
 			echo '<a href="'.$link.'" target="_blank"><div id="watermark" style="width: 140px; height: 35px; display: block;"></div></a>';
 		}
 	?>
+	<script src="/resources/js/dist/hv3d.js?v=<?=filemtime('resources/js/dist/hv3d.js')?>" type="text/javascript"></script>
 </body>
 </html>

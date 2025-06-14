@@ -10,7 +10,9 @@
   MovieHistory, UserVideoGallery, MessageConsole, Helioviewer,
   KeyboardManager, SettingsLoader, TimeControls, ScreenshotManagerUI, MovieManagerUI, assignTouchHandlers,
   TileLayerAccordion, VisualGlossary, _gaq */
+
 "use strict";
+
 var HelioviewerWebClient = HelioviewerClient.extend(
     /** @lends HelioviewerWebClient.prototype */
     {
@@ -155,7 +157,8 @@ var HelioviewerWebClient = HelioviewerClient.extend(
                 }
                 break;
             case "#hv-drawer-timeline-events":
-                if ( drawerObj.open ) {
+                // Only output normal makes sense for timeline events
+                if ( drawerObj.open && Helioviewer.outputType == "normal" ) {
                     self.drawerTimelineEventsClick(true);
                 }
                 break;
@@ -205,12 +208,27 @@ var HelioviewerWebClient = HelioviewerClient.extend(
      * @description Sets up a simple AJAX-request loading indicator
      */
     _initLoadingIndicator: function () {
-        $(document).ajaxStart(function () {
+        this._loadCount = 0;
+        $(document).ajaxStart(this.startLoading.bind(this))
+                   .ajaxStop(this.stopLoading.bind(this));
+    },
+
+    startLoading: function () {
+        this._loadCount++;
+        if (this._loadCount === 1) {
             $('#loading').show();
-        })
-        .ajaxStop(function () {
+        }
+    },
+
+    stopLoading: function () {
+        if (this._loadCount > 0) {
+            this._loadCount--;
+        } else {
+            console.warn("This call to stopLoading would bring the counter below 0.");
+        }
+        if (this._loadCount <= 0) {
             $('#loading').hide();
-        });
+        }
     },
 
     /**
@@ -262,10 +280,6 @@ var HelioviewerWebClient = HelioviewerClient.extend(
 
         $(document).bind("datasources-initialized", function (e, dataSources) {
             self._tileLayerAccordion = new TileLayerAccordion('#tileLayerAccordion', dataSources, date);
-        });
-
-        $(document).bind("event-types-initialized", function (e, eventTypes, date) {
-            self._eventLayerAccordion = new EventLayerAccordion('#eventLayerAccordion', eventTypes, date);
         });
 
         this._super("#helioviewer-viewport-container-outer", date, marginTop, marginBottom);
@@ -1595,6 +1609,7 @@ var HelioviewerWebClient = HelioviewerClient.extend(
                 "imageLayers"       : Helioviewer.userSettings.get("state.tileLayers"),
                 "eventLayers"       : Helioviewer.userSettings.get("state.events_v2"),
                 "celestialBodies"   : Helioviewer.userSettings.get("state.celestialBodiesChecked"),
+                "enable3d"          : Helioviewer.userSettings.get("state.enable3d"),
             };
 
             return $.ajax({
