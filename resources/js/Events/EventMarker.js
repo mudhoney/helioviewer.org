@@ -58,8 +58,9 @@ var EventMarker = Class.extend(
     },
 
     /**
-     * Returns true if this event data contains footprint polygon information
-     * footprint is an array of polygons, where each polygon is an array of [x, y] HPC coordinates
+     * Returns true if this event data contains footprint polygon information.
+     * footprint is a flat array of {x, y} HPC-arcsecond points forming a single
+     * closed polygon (SVG <polygon> auto-closes the path).
      */
     hasFootprint: function () {
       return this.hasOwnProperty("footprint") && Array.isArray(this.footprint) && this.footprint.length > 0;
@@ -143,22 +144,16 @@ var EventMarker = Class.extend(
      * @param {integer} zIndex - CSS z-index for layering regions in the DOM
      *
      * HOW SVG FOOTPRINT RENDERING WORKS:
-     * 1. The API provides footprint as an array of polygons
-     * 2. Each polygon is an array of [x, y] points in HPC coordinates (arcseconds)
-     * 3. We convert HPC coordinates to screen pixels and render as SVG polygons
+     * 1. The API provides footprint as a flat array of {x, y} HPC-arcsec points
+     *    forming a single closed polygon
+     * 2. We convert HPC coordinates to screen pixels and render as one SVG polygon
      *
      * DATA STRUCTURE:
      * event.footprint = [
-     *   [                           // First polygon
-     *     [x1, y1],                 // Point 1: HPC coordinates in arcseconds
-     *     [x2, y2],                 // Point 2
-     *     [x3, y3],                 // Point 3
-     *     ...
-     *   ],
-     *   [                           // Second polygon (if any)
-     *     [x1, y1],
-     *     ...
-     *   ]
+     *   { x: x1, y: y1 },   // HPC arcseconds, single polygon
+     *   { x: x2, y: y2 },
+     *   { x: x3, y: y3 },
+     *   ...
      * ]
      *
      * COORDINATE CONVERSION:
@@ -226,7 +221,8 @@ var EventMarker = Class.extend(
 
       if (this.hasFootprint()) {
         // Centroid = average of all polygon vertices in HPC arcseconds
-        let total_x = 0, total_y = 0;
+        let total_x = 0,
+          total_y = 0;
         this.footprint.forEach((point) => {
           total_x += point.x;
           total_y += point.y;
@@ -256,7 +252,10 @@ var EventMarker = Class.extend(
       }
 
       // Bounding box of all footprint points in screen pixels
-      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      let minX = Infinity,
+        minY = Infinity,
+        maxX = -Infinity,
+        maxY = -Infinity;
       this.footprint.forEach((point) => {
         let screenX = point.x / imageScale;
         let screenY = -point.y / imageScale; // screen Y is inverted
@@ -270,16 +269,18 @@ var EventMarker = Class.extend(
       this.eventRegionDomNode.css({
         left: minX + "px",
         top: minY + "px",
-        width: (maxX - minX) + "px",
-        height: (maxY - minY) + "px"
+        width: maxX - minX + "px",
+        height: maxY - minY + "px"
       });
 
       // Polygon points are relative to the SVG origin (minX, minY)
-      let pointsStr = this.footprint.map((point) => {
-        let screenX = point.x / imageScale - minX;
-        let screenY = -point.y / imageScale - minY;
-        return `${screenX},${screenY}`;
-      }).join(" ");
+      let pointsStr = this.footprint
+        .map((point) => {
+          let screenX = point.x / imageScale - minX;
+          let screenY = -point.y / imageScale - minY;
+          return `${screenX},${screenY}`;
+        })
+        .join(" ");
 
       let svgPolygon = this.eventRegionDomNode.find("polygon")[0];
       if (svgPolygon) {

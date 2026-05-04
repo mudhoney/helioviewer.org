@@ -51,7 +51,7 @@ export default class EventLoader {
    */
   static getEventTypeColor(type, fallback = "#d4d4d4") {
     const entry = EventLoader.eventLabelsMap[type];
-    return (entry && entry.color) ? entry.color : fallback;
+    return entry && entry.color ? entry.color : fallback;
   }
 
   /**
@@ -62,7 +62,7 @@ export default class EventLoader {
    */
   static getEventTypeName(type, fallback = "Unknown") {
     const entry = EventLoader.eventLabelsMap[type];
-    return (entry && entry.name) ? entry.name : fallback;
+    return entry && entry.name ? entry.name : fallback;
   }
 
   static make(outputType = "normal", debug) {

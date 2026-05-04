@@ -265,40 +265,35 @@ class FullEventLoader extends EventLoader {
     const eventPinsWithFrms = {};
 
     for (const s of selections) {
-
       let [source, eventType, frm, eventId] = s.split(">>");
 
-      if ( source != undefined && eventType != undefined) {
+      if (source != undefined && eventType != undefined) {
+        let eventPin = findEventTypePin(eventType);
 
-          let eventPin = findEventTypePin(eventType);
-
-          if(eventPin == undefined) {
-              continue;
-          }
-
-          if (!eventPinsWithFrms.hasOwnProperty(eventPin)) {
-            eventPinsWithFrms[eventPin] = new Set();
-          }
-
-          if (frm != undefined) {
-            eventPinsWithFrms[eventPin].add(frm);
-          }
-
+        if (eventPin == undefined) {
           continue;
+        }
+
+        if (!eventPinsWithFrms.hasOwnProperty(eventPin)) {
+          eventPinsWithFrms[eventPin] = new Set();
+        }
+
+        if (frm != undefined) {
+          eventPinsWithFrms[eventPin].add(frm);
+        }
+
+        continue;
       }
 
-      if ( source != undefined ) {
-
-        getAllEventPinsForSource(source).forEach(p => {
+      if (source != undefined) {
+        getAllEventPinsForSource(source).forEach((p) => {
           if (!eventPinsWithFrms.hasOwnProperty(p)) {
             eventPinsWithFrms[p] = new Set();
           }
         });
 
         continue;
-
       }
-
     }
 
     const layerStringPortions = [];
@@ -316,7 +311,9 @@ class FullEventLoader extends EventLoader {
 
   showEventInfoDialog(eventId) {
     var markers = Object.values(this.markers).flat();
-    var match = markers.find(function(m) { return m.marker.id === eventId; });
+    var match = markers.find(function (m) {
+      return m.marker.id === eventId;
+    });
     if (match) {
       match.marker._showEventInfoDialog();
     }
