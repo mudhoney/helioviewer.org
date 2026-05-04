@@ -56,6 +56,9 @@ jobs:
       uses: Helioviewer-Project/helioviewer.org-tests/.github/actions/playwright-test@main
       with:
         helioviewer-org-ref: ${{ github.sha }}
+        # TODO(merge-blocker): revert api-ref before merging — pinned to api PR #478
+        # https://github.com/Helioviewer-Project/api/pull/478
+        api-ref: refs/pull/478/head
         shard-index: ${{ matrix.shardIndex }}
         shard-total: ${{ matrix.shardTotal }}
   merge-reports:
