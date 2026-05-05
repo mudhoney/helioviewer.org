@@ -1464,6 +1464,8 @@ var TimelineEvents = Class.extend({
 						'event_starttime': '',
 						'event_endtime': ''
 					});
+					// Highcharts requires series data sorted by x ascending (error #15)
+					series['data'].sort(function(a, b){ return a.x - b.x; });
 				}
 
 				var baseColor = EventLoader.getEventTypeColor(series.event_type);
