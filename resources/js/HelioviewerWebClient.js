@@ -2223,6 +2223,13 @@ var HelioviewerWebClient = HelioviewerClient.extend(
             if(typeof this.timelineEvents == 'undefined'){
                 setTimeout(function(){self.timelineEvents   = new TimelineEvents();}, 200);
             }else{
+                // Container was hidden + height:0 while closed — Highcharts kept its
+                // last (zero/tiny) measurement. Reflow once the drawer has its full
+                // height back so the chart re-measures and redraws full-size.
+                setTimeout(function(){
+                    var chart = $('#data-coverage-timeline-events').highcharts();
+                    if (chart) chart.reflow();
+                }, self.drawerSpeed);
                 this.timelineEvents.drawPlotLine();
                 $('#data-coverage-timeline-events').highcharts().xAxis[0].setExtremes(timelineStartDate, timelineEndDate);
                 this.timelineEvents.afterSetExtremes({min:timelineStartDate, max:timelineEndDate});
