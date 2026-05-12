@@ -564,13 +564,15 @@
 		position: fixed !important;
 		margin: auto;
 		width: 100% !important;
-		max-height: 100% !important;
+		max-height: calc(100dvh - 105px) !important;
 		min-height: 0px;
 		min-width: 300px !important;
-		height: 100% !important;
+		height: calc(100dvh - 105px) !important;
 		top: 40px;
 		/* bottom: 0; */
 		/* margin-bottom: 40px; */
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
 		background-color: transparent;
 		background-image: url(../../images/mobile/backmobilemenubg3.png);
 		-moz-box-shadow: 0pt 2pt 4pt 1pt rgb(255 255 255 / 75%);
@@ -1388,8 +1390,10 @@
 /* tablets & smartphones LANDSCAPE */
 @media screen and (max-width: 1024px) and (orientation : landscape) { /* 790px  */
 	#hv-drawer-left {
-		max-height: 100% !important;
-		height: 100% !important;
+		max-height: calc(100dvh - 90px) !important;
+		height: calc(100dvh - 90px) !important;
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
 		padding-bottom: 0px;
 	}
 
