@@ -263,6 +263,7 @@ var SettingsLoader = (
                         "layers_v2": [],
                     },
                 },
+                "event_selections": [],
                 "eventLabels": true,
                 "imageScale" : serverSettings.defaultImageScale,
                 "refScale"   : serverSettings.refImageScale,

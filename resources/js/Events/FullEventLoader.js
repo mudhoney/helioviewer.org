@@ -149,6 +149,13 @@ class FullEventLoader extends EventLoader {
       Helioviewer.userSettings.set(legacyKey, legacySelection);
       Helioviewer.userSettings.set(newKey, selections);
 
+      // Cross-source union: state.event_selections is the single flat source of truth
+      // for any consumer that doesn't care which source a selection came from.
+      const union = Array.from(new Set(
+        Object.values(this.selections).flat().filter(s => s != null)
+      ));
+      Helioviewer.userSettings.set("state.event_selections", union);
+
       $(document).trigger("change-feature-events-state");
     };
   }
@@ -242,7 +249,6 @@ class FullEventLoader extends EventLoader {
   }
 
   getLegacyShallowEventLayerString() {
-    const selections = this.getSelections();
 
     const findEventTypePin = (eventTypeStr) => {
       for (const key in EventLoader.eventLabelsMap) {
