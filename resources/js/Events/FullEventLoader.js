@@ -249,6 +249,7 @@ class FullEventLoader extends EventLoader {
   }
 
   getLegacyShallowEventLayerString() {
+    const selections = this.getSelections();
 
     const findEventTypePin = (eventTypeStr) => {
       for (const key in EventLoader.eventLabelsMap) {
