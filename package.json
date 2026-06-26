@@ -26,7 +26,7 @@
     "xmlhttprequest": "^1.8.0"
   },
   "dependencies": {
-    "@helioviewer/event-tree": "github:Helioviewer-Project/event-tree#71a2f43",
+    "@helioviewer/event-tree": "github:Helioviewer-Project/event-tree#7175d460d6077ab04d14a131ff7d4e09bded7973",
     "@helioviewer/sun": "^0.8.0",
     "@react-three/drei": "^9.121.4",
     "@react-three/fiber": "^8.17.12",
