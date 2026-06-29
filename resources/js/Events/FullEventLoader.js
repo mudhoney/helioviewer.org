@@ -170,6 +170,11 @@ class FullEventLoader extends EventLoader {
         em.marker.setVisibility(newVisibility);
       });
       Helioviewer.userSettings.set("state.events_v2.tree_" + source + ".markers_visible", newVisibility);
+
+      let eventVisibilitySelections = Helioviewer.userSettings.get("state.event_visibility_selections");
+      eventVisibilitySelections[source].marker_visibility = newVisibility;
+      Helioviewer.userSettings.set("state.event_visibility_selections", eventVisibilitySelections);
+
       this.draw();
     };
   }
@@ -180,6 +185,11 @@ class FullEventLoader extends EventLoader {
         em.marker.setLabelVisibility(newVisibility);
       });
       Helioviewer.userSettings.set("state.events_v2.tree_" + source + ".labels_visible", newVisibility);
+
+      let eventVisibilitySelections = Helioviewer.userSettings.get("state.event_visibility_selections");
+      eventVisibilitySelections[source].label_visibility = newVisibility;
+      Helioviewer.userSettings.set("state.event_visibility_selections", eventVisibilitySelections);
+
       this.draw();
     };
   }
@@ -245,9 +255,14 @@ class FullEventLoader extends EventLoader {
 
     const newLabelVisibility = !weHaveAtLeastOneEvLabelsOn;
 
+    let eventVisibilitySelections = Helioviewer.userSettings.get("state.event_visibility_selections");
+
     for (const source of EventLoader.sources) {
       Helioviewer.userSettings.set("state.events_v2.tree_" + source + ".labels_visible", newLabelVisibility);
+      eventVisibilitySelections[source].label_visibility = newLabelVisibility;
     }
+
+    Helioviewer.userSettings.set("state.event_visibility_selections", eventVisibilitySelections);
 
     await this.draw();
   }

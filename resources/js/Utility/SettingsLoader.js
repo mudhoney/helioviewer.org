@@ -47,7 +47,38 @@ var SettingsLoader = (
     _migrate: function (userSettings) {
         // GOES-R was renamed to GOES. Any setting with GOES-R must be
         // renamed to GOES.
-        return this._patch_goes_r(userSettings);
+        userSettings = this._patch_goes_r(userSettings);
+        userSettings = this._patch_event_visibility_selections(userSettings);
+        return userSettings;
+    },
+
+    /**
+     * Ensures state.event_visibility_selections exists and covers every source.
+     * Runs after both localStorage load and shared-url (clientState) apply, so it
+     * backfills users / shared states that predate this field. Per source: keep an
+     * existing entry; else derive from events_v2 (preserving prior visibility);
+     * else default to visible.
+     */
+    _patch_event_visibility_selections: function(userSettings) {
+        const state = userSettings.settings.state;
+        const existing = state.event_visibility_selections || {};
+        const result = {};
+
+        for (const source of EventLoader.sources) {
+            if (existing[source]) {
+                result[source] = existing[source];
+                continue;
+            }
+
+            const tree = (state.events_v2 || {})["tree_" + source] || {};
+            result[source] = {
+                marker_visibility: tree.markers_visible !== undefined ? tree.markers_visible : true,
+                label_visibility: tree.labels_visible !== undefined ? tree.labels_visible : true
+            };
+        }
+
+        userSettings.set("state.event_visibility_selections", result);
+        return userSettings;
     },
 
     _patch_goes_r: function(userSettings) {
@@ -264,6 +295,9 @@ var SettingsLoader = (
                     },
                 },
                 "event_selections": [],
+                "event_visibility_selections": Object.fromEntries(
+                    EventLoader.sources.map((s) => [s, { "marker_visibility": true, "label_visibility": true }])
+                ),
                 "eventLabels": true,
                 "imageScale" : serverSettings.defaultImageScale,
                 "refScale"   : serverSettings.refImageScale,

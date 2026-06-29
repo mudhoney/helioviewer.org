@@ -174,10 +174,10 @@
         var parsed = null;
         try { parsed = JSON.parse(raw); } catch(e) { parsed = null; }
 
-        // For "settings" key, show "state" sub-key first,
-        // and inside "state" show "event_selections" first.
+        // For "settings" key, show "state" sub-key first, and inside "state" show
+        // event_selections, then event_visibility_selections, then events_v2.
         if (storageKey === 'settings' && parsed && typeof parsed === 'object' && parsed.state) {
-            parsed.state = reorderKeysFirst(parsed.state, ['event_selections', 'events_v2']);
+            parsed.state = reorderKeysFirst(parsed.state, ['event_selections', 'event_visibility_selections', 'events_v2']);
             var reordered = { state: parsed.state };
             Object.keys(parsed).forEach(function(k) {
                 if (k !== 'state') reordered[k] = parsed[k];
