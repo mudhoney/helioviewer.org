@@ -293,6 +293,15 @@ var SettingsLoader = (
                         "layers": [],
                         "layers_v2": [],
                     },
+                    "tree_WSA": {
+                        "id": "WSA",
+                        "visible": true,
+                        "markers_visible":true,
+                        "labels_visible":true,
+                        "layer_available_visible":true,
+                        "layers": [],
+                        "layers_v2": [],
+                    },
                 },
                 "event_selections": [],
                 "event_visibility_selections": Object.fromEntries(

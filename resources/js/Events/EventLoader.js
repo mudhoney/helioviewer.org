@@ -1,7 +1,7 @@
 import EventGlossary from "./EventGlossary";
 
 export default class EventLoader {
-  static sources = ["HEK", "CCMC", "RHESSI"];
+  static sources = ["WSA", "HEK", "CCMC", "RHESSI"];
 
   static eventLabelsMap = {
     AR: { name: "Active Region", source: "HEK", color: "#ff8f97" },
@@ -40,7 +40,9 @@ export default class EventLoader {
     C3: { name: "DONKI", source: "CCMC", color: "#f0c060" },
     FP: { name: "Solar Flare Predictions", source: "CCMC", color: "#74b0c5" },
 
-    F2: { name: "Solar Flares", source: "RHESSI", color: "#ff7070" }
+    F2: { name: "Solar Flares", source: "RHESSI", color: "#ff7070" },
+
+    MC: { name: "Magnetic Connectivity", source: "WSA", color: "#B0C4FF" }
   };
 
   /**
