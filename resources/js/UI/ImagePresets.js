@@ -310,21 +310,8 @@ var UserLayersPresets = Class.extend({
 
         //Add events
         if($('input.item-events').is(':checked')){
-			var eventLayerArray = [];
-			let events = Helioviewer.userSettings.get("state.events_v2");
-	        Object.keys(events).forEach((section) => {
-				eventLayerArray = eventLayerArray.concat(events[section].layers)
-			});
-	        if(eventLayerArray.length == 20){
-		        eventsString += 'All';
-	        }else{
-		        $.each(eventLayerArray, function (i, eventLayerObj) {
-			        if(parseInt(eventLayerObj.open) == 1){
-				        eventsString += eventLayerObj.event_type+', '; //eventLayerObj.frms.join(';');
-			        }
-		        });
-		        eventsString = eventsString.trim().replace(/,\s*$/, "");
-	        }
+			var sels = Helioviewer.userSettings.get("state.event_selections");
+			eventsString += [...new Set(sels.map((p) => p.split(">>").slice(0, 2).join(">>")))].join(', ');
 
         }
 
