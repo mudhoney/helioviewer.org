@@ -2200,9 +2200,8 @@ var HelioviewerWebClient = HelioviewerClient.extend(
         }
         else if ( !this.drawerTimelineEventsOpened || openNow === true ) {
 
-            var imageLayersStr = this.getEvents();
-            if(imageLayersStr == ''){
-                $(document).trigger("message-console-log", ["To open Events Timeline you must select at least one event.", {sticky: true,header: "Just now"}, true, true]);
+            if(Helioviewer.userSettings.get("state.event_selections").length == 0){
+                Helioviewer.messageConsole.warn("To open Events Timeline you must select at least one event.");
                 return;
             }
 
