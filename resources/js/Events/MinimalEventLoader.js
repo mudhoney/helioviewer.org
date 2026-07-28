@@ -90,6 +90,11 @@ class MinimalEventLoader extends EventLoader {
       Helioviewer.userSettings.set("state.events_v2.tree_" + l.id + ".layers_v2", selections[l.id]);
     });
 
+    // Flat union of the paths so screenshots/movies (which read state.event_selections)
+    // include events in minimal/embed mode, where FullEventLoader.makeSelectionsUpdate never runs.
+    const eventSelectionsUnion = Array.from(new Set(Object.values(selections).flat().filter((s) => s != null)));
+    Helioviewer.userSettings.set("state.event_selections", eventSelectionsUnion);
+
     this.draw();
   }
 
