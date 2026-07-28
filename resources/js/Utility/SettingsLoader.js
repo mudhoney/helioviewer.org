@@ -117,7 +117,8 @@ var SettingsLoader = (
             userSettings.set("state.centerX", parseFloat(clientState.data.centerX));
             userSettings.set("state.centerY", parseFloat(clientState.data.centerY));
             userSettings.set("state.tileLayers", clientState.data.imageLayers);
-            userSettings.set("state.events_v2", clientState.data.eventLayers);
+            userSettings.set("state.event_selections", clientState.data.event_selections);
+            userSettings.set("state.event_visibility_selections", clientState.data.event_visibility_selections);
             userSettings.set("state.celestialBodiesChecked", clientState.data.celestialBodies);
             userSettings.set("state.date", parseInt(clientState.data.date));
             userSettings.set("state.enable3d", clientState.data.hasOwnProperty("enable3d") ? clientState.data.enable3d : false);

@@ -1607,7 +1607,8 @@ var HelioviewerWebClient = HelioviewerClient.extend(
                 "centerX"           : Helioviewer.userSettings.get("state.centerX"),
                 "centerY"           : Helioviewer.userSettings.get("state.centerY"),
                 "imageLayers"       : Helioviewer.userSettings.get("state.tileLayers"),
-                "eventLayers"       : Helioviewer.userSettings.get("state.events_v2"),
+                "event_selections"            : Helioviewer.userSettings.get("state.event_selections"),
+                "event_visibility_selections" : Helioviewer.userSettings.get("state.event_visibility_selections"),
                 "celestialBodies"   : Helioviewer.userSettings.get("state.celestialBodiesChecked"),
                 "enable3d"          : Helioviewer.userSettings.get("state.enable3d"),
             };
