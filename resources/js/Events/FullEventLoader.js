@@ -12,7 +12,6 @@ import EventLoader from "./EventLoader";
 class FullEventLoader extends EventLoader {
   markers = {};
   selections = {};
-  legacySelections = {};
   reactRoots = {};
 
   constructor(debug) {
@@ -22,7 +21,6 @@ class FullEventLoader extends EventLoader {
     this.debug = debug;
 
     this.markers = Object.fromEntries(EventLoader.sources.map((s) => [s, []]));
-    this.legacySelections = Object.fromEntries(EventLoader.sources.map((s) => [s, []]));
     this.selections = Object.fromEntries(EventLoader.sources.map((s) => [s, null]));
 
     if (Helioviewer.urlSettings.loadState) {
@@ -62,24 +60,6 @@ class FullEventLoader extends EventLoader {
     $(document).on("toggle-event-labels", (e) => {
       this.toggleEventLabels();
     });
-  }
-
-  getSelections(source = null) {
-    if (source === null) {
-      return Object.values(this.selections)
-        .flat()
-        .filter((s) => s != null);
-    } else {
-      return this.selections[source] ? null : [];
-    }
-  }
-
-  getLegacySelections(source = null) {
-    if (source === null) {
-      return Object.values(this.legacySelections).flat();
-    } else {
-      return this.legacySelections[source];
-    }
   }
 
   makeHoveredEventsUpdate(source) {
@@ -256,74 +236,6 @@ class FullEventLoader extends EventLoader {
     Helioviewer.userSettings.set("state.event_visibility_selections", eventVisibilitySelections);
 
     await this.draw();
-  }
-
-  getLegacyShallowEventLayerString() {
-    const selections = this.getSelections();
-
-    const findEventTypePin = (eventTypeStr) => {
-      for (const key in EventLoader.eventLabelsMap) {
-        if (EventLoader.eventLabelsMap[key].name === eventTypeStr) {
-          return key;
-        }
-      }
-    };
-
-    const getAllEventPinsForSource = (source) => {
-      const pins = [];
-      for (const key in EventLoader.eventLabelsMap) {
-        if (EventLoader.eventLabelsMap[key].source === source) {
-          pins.push(key);
-        }
-      }
-      return pins;
-    };
-
-    const eventPinsWithFrms = {};
-
-    for (const s of selections) {
-      let [source, eventType, frm, eventId] = s.split(">>");
-
-      if (source != undefined && eventType != undefined) {
-        let eventPin = findEventTypePin(eventType);
-
-        if (eventPin == undefined) {
-          continue;
-        }
-
-        if (!eventPinsWithFrms.hasOwnProperty(eventPin)) {
-          eventPinsWithFrms[eventPin] = new Set();
-        }
-
-        if (frm != undefined) {
-          eventPinsWithFrms[eventPin].add(frm);
-        }
-
-        continue;
-      }
-
-      if (source != undefined) {
-        getAllEventPinsForSource(source).forEach((p) => {
-          if (!eventPinsWithFrms.hasOwnProperty(p)) {
-            eventPinsWithFrms[p] = new Set();
-          }
-        });
-
-        continue;
-      }
-    }
-
-    const layerStringPortions = [];
-
-    for (const ep in eventPinsWithFrms) {
-      if (eventPinsWithFrms[ep].size <= 0 || eventPinsWithFrms[ep].has("all")) {
-        layerStringPortions.push("[" + ep + ",all,1]");
-      } else {
-        layerStringPortions.push("[" + ep + "," + [...eventPinsWithFrms[ep]].join(";") + ",1]");
-      }
-    }
-
-    return layerStringPortions.join(",");
   }
 
   showEventInfoDialog(eventId) {
