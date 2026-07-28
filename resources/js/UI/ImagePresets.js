@@ -100,9 +100,7 @@ var UserLayersPresets = Class.extend({
 	        }
 
 	        if($('input.item-events').is(':checked')){
-	            Helioviewer.eventLoader.ready((el) => {
-	                item.events_v2 = el.getSelections();
-	            });
+	            item.events_v2 = Helioviewer.userSettings.get("state.event_selections");
 	        }
 
 	        var currentList = Helioviewer.userSettings.get("state.userTileLayers");
