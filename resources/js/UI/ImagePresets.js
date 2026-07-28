@@ -158,6 +158,7 @@ var UserLayersPresets = Class.extend({
 		        var date = $(this).data('date');
 		        var layers = $(this).data('layers');
 		        var events = $(this).data('events');
+		        var events_v2 = $(this).data('events_v2');
 
 		        if(typeof id != 'undefined' && parseInt(id) >= 0){
 			        if(typeof $(this).qtip('api') == 'undefined'){
@@ -166,7 +167,7 @@ var UserLayersPresets = Class.extend({
 				                title: {
 				                    text: name
 				                },
-				                text: self._buildPreviewTooltipHTML(id, name, date, layers, events)
+				                text: self._buildPreviewTooltipHTML(id, name, date, layers, events, events_v2)
 				            },
 				            position: {
 				                adjust: {
@@ -441,7 +442,7 @@ var UserLayersPresets = Class.extend({
 		return listHTML;
 	},
 
-	_buildPreviewTooltipHTML: function (id, name, date, layers, events) {
+	_buildPreviewTooltipHTML: function (id, name, date, layers, events, events_v2) {
 		var dateFormated = '', layersFormated = '', eventsFormated = '', urlDate = '', urlLayers = '', urlEvents = '';
         var eventLabels = 'false';
 
@@ -503,7 +504,11 @@ var UserLayersPresets = Class.extend({
 		        urlEvents = '';
 		        eventString = 'None';
 	        }else{
-		        urlEvents = events;
+		        if(typeof events_v2 != 'undefined' && events_v2 != ''){
+			        urlEvents = encodeURIComponent(events_v2.split(",").join(";"));
+		        }else{
+			        urlEvents = encodeURIComponent(Object.values(EventLoader.translateLegacyEventURLsToSelections(events)).flat().join(";"));
+		        }
 
 		        var eventLayersString = events.slice(1, -1);
 		        var eventLayersArr = eventLayersString.split("],[");
@@ -521,12 +526,12 @@ var UserLayersPresets = Class.extend({
 						<td>'+eventString+'</td>\
 					</tr>';
         }else{
-	        urlEvents = vport.events;
+	        urlEvents = encodeURIComponent(Helioviewer.userSettings.get("state.event_selections").join(";"));
         }
 
 
 
-        var screenshotUrl = Helioviewer.api+'?action=takeScreenshot&imageScale='+imageScale+'&layers='+urlLayers+'&events='+urlEvents+'&eventLabels='+eventLabels+'&scale=false&scaleType=earth&scaleX=0&scaleY=0&date='+urlDate+'&x1='+x1+'&x2='+x2+'&y1='+y1+'&y2='+y2+'&display=true&watermark=false&switchSources=true';
+        var screenshotUrl = Helioviewer.api+'?action=takeScreenshot&imageScale='+imageScale+'&layers='+urlLayers+'&event_selections='+urlEvents+'&eventLabels='+eventLabels+'&scale=false&scaleType=earth&scaleX=0&scaleY=0&date='+urlDate+'&x1='+x1+'&x2='+x2+'&y1='+y1+'&y2='+y2+'&display=true&watermark=false&switchSources=true';
         var html = '<div style="text-align: center;">\
             		<img style="width:200px;" src="'+screenshotUrl+'" alt="preview thumbnail" class="screenshot-preview" />\
             	</div>\
