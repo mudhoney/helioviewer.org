@@ -121,8 +121,8 @@ class FullEventLoader extends EventLoader {
           eventContainer,
           e.event_data,
           i + 1,
-          Helioviewer.userSettings.get("state.event_visibility_selections")[source].label_visibility,
-          Helioviewer.userSettings.get("state.event_visibility_selections")[source].marker_visibility
+          Helioviewer.userSettings.get("state.event_visibility_selections")[source]?.label_visibility ?? true,
+          Helioviewer.userSettings.get("state.event_visibility_selections")[source]?.marker_visibility ?? true
         );
 
         allEventMarkers[i] = {
@@ -139,16 +139,7 @@ class FullEventLoader extends EventLoader {
 
   makeSelectionsUpdate(source) {
     return (selections, events) => {
-      let legacySelection = EventLoader.translateSelectionsToLegacyEventLayers(selections, source, events);
-
-      this.legacySelections[source] = legacySelection;
       this.selections[source] = selections;
-
-      let legacyKey = "state.events_v2.tree_" + source + ".layers";
-      let newKey = "state.events_v2.tree_" + source + ".layers_v2";
-
-      Helioviewer.userSettings.set(legacyKey, legacySelection);
-      Helioviewer.userSettings.set(newKey, selections);
 
       // Cross-source union: state.event_selections is the single flat source of truth
       // for any consumer that doesn't care which source a selection came from.
@@ -170,9 +161,9 @@ class FullEventLoader extends EventLoader {
       this.markers[source].forEach((em) => {
         em.marker.setVisibility(newVisibility);
       });
-      Helioviewer.userSettings.set("state.events_v2.tree_" + source + ".markers_visible", newVisibility);
 
       let eventVisibilitySelections = Helioviewer.userSettings.get("state.event_visibility_selections");
+      eventVisibilitySelections[source] = eventVisibilitySelections[source] ?? { marker_visibility: true, label_visibility: true };
       eventVisibilitySelections[source].marker_visibility = newVisibility;
       Helioviewer.userSettings.set("state.event_visibility_selections", eventVisibilitySelections);
 
@@ -185,9 +176,9 @@ class FullEventLoader extends EventLoader {
       this.markers[source].forEach((em) => {
         em.marker.setLabelVisibility(newVisibility);
       });
-      Helioviewer.userSettings.set("state.events_v2.tree_" + source + ".labels_visible", newVisibility);
 
       let eventVisibilitySelections = Helioviewer.userSettings.get("state.event_visibility_selections");
+      eventVisibilitySelections[source] = eventVisibilitySelections[source] ?? { marker_visibility: true, label_visibility: true };
       eventVisibilitySelections[source].label_visibility = newVisibility;
       Helioviewer.userSettings.set("state.event_visibility_selections", eventVisibilitySelections);
 
@@ -215,8 +206,8 @@ class FullEventLoader extends EventLoader {
               onSelectionsUpdate={this.makeSelectionsUpdate(source)}
               onToggleVisibility={this.makeToggleVisibility(source)}
               onToggleLabelVisibility={this.makeToggleLabelVisibility(source)}
-              visibility={Helioviewer.userSettings.get("state.event_visibility_selections")[source].marker_visibility}
-              labelVisibility={Helioviewer.userSettings.get("state.event_visibility_selections")[source].label_visibility}
+              visibility={Helioviewer.userSettings.get("state.event_visibility_selections")[source]?.marker_visibility ?? true}
+              labelVisibility={Helioviewer.userSettings.get("state.event_visibility_selections")[source]?.label_visibility ?? true}
               forcedSelections={this.selections[source]}
               onLoad={resolve}
               onError={(err) => reject(err)}
@@ -246,20 +237,19 @@ class FullEventLoader extends EventLoader {
   }
 
   async toggleEventLabels() {
+    let eventVisibilitySelections = Helioviewer.userSettings.get("state.event_visibility_selections");
+
     let weHaveAtLeastOneEvLabelsOn = false;
 
     for (const source of EventLoader.sources) {
       weHaveAtLeastOneEvLabelsOn =
-        weHaveAtLeastOneEvLabelsOn ||
-        Helioviewer.userSettings.get("state.events_v2.tree_" + source + ".labels_visible");
+        weHaveAtLeastOneEvLabelsOn || (eventVisibilitySelections[source]?.label_visibility ?? true);
     }
 
     const newLabelVisibility = !weHaveAtLeastOneEvLabelsOn;
 
-    let eventVisibilitySelections = Helioviewer.userSettings.get("state.event_visibility_selections");
-
     for (const source of EventLoader.sources) {
-      Helioviewer.userSettings.set("state.events_v2.tree_" + source + ".labels_visible", newLabelVisibility);
+      eventVisibilitySelections[source] = eventVisibilitySelections[source] ?? { marker_visibility: true, label_visibility: true };
       eventVisibilitySelections[source].label_visibility = newLabelVisibility;
     }
 
@@ -363,9 +353,10 @@ class FullEventLoader extends EventLoader {
   }
 
   removeHighlight() {
+    let eventVisibilitySelections = Helioviewer.userSettings.get("state.event_visibility_selections");
     for (const s in this.markers) {
       for (const m of this.markers[s]) {
-        m.marker.setVisibility(Helioviewer.userSettings.get("state.events_v2.tree_" + s + ".markers_visible"));
+        m.marker.setVisibility(eventVisibilitySelections[s]?.marker_visibility ?? true);
       }
     }
   }
