@@ -497,15 +497,16 @@ var UserLayersPresets = Class.extend({
 			        urlEvents = encodeURIComponent(Object.values(EventLoader.translateLegacyEventURLsToSelections(events)).flat().join(";"));
 		        }
 
-		        var eventLayersString = events.slice(1, -1);
-		        var eventLayersArr = eventLayersString.split("],[");
 		        var eventString = '';
-		        $.each(eventLayersArr, function(k, v){
-			        var layerArr = v.split(",");
-			        eventString += ' '+layerArr[0]+',';
-		        });
-
-		        eventString = eventString.trim().replace(/,\s*$/, "");
+		        if(typeof events_v2 != 'undefined' && events_v2 != ''){
+			        eventString = [...new Set(events_v2.split(",").map((p) => p.split(">>").slice(0, 2).join(">>")))].join(', ');
+		        }else{
+			        $.each(events.slice(1, -1).split("],["), function(k, v){
+				        var pin = v.split(",")[0];
+				        if(pin && pin != 'undefined'){ eventString += ' '+pin+','; }
+			        });
+			        eventString = eventString.trim().replace(/,\s*$/, "");
+		        }
 	        }
 
 	        eventsFormated = '<tr>\
