@@ -1110,14 +1110,14 @@ var HelioviewerWebClient = HelioviewerClient.extend(
              +     '<img src="' + Helioviewer.api + '?action=takeScreenshot'
              + '&imageScale=' + hardcodedScale
              + '&layers=['   + sourceId + ',1,100]'
-             + '&events=&eventLabels=false'
+             + '&event_selections=&eventLabels=false'
              + '&scale=false&scaleType=earth&scaleX=0&scaleY=0'
              + '&date='      + startDate
              + '&x0=0&y0=0&width=256&height=256&display=true&watermark=false" class="preview start" /> '
              +     '<img src="' + Helioviewer.api + '?action=takeScreenshot'
              + '&imageScale=' + hardcodedScale
              + '&layers=['   + sourceId + ',1,100]'
-             + '&events=&eventLabels=false'
+             + '&event_selections=&eventLabels=false'
              + '&scale=false&scaleType=earth&scaleX=0&scaleY=0'
              + '&date='      + endDate
              + '&x0=0&y0=0&width=256&height=256&display=true&watermark=false" class="preview end"  onerror="this.src=\'/resources/images/img_fail_2.png\'" /> '
@@ -1393,7 +1393,7 @@ var HelioviewerWebClient = HelioviewerClient.extend(
                      +     '<img src="' + Helioviewer.api + '?action=takeScreenshot'
                      +     '&imageScale=' + thumbImageScale
                      +     '&layers='    + imageLayer
-                     +     '&events=&eventLabels=false'
+                     +     '&event_selections=&eventLabels=false'
                      +     '&scale=false&scaleType=earth&scaleX=0&scaleY=0'
                      +     '&date='      + startDate
                      +     '&x1=' + x1
@@ -1412,7 +1412,7 @@ var HelioviewerWebClient = HelioviewerClient.extend(
                      +     '<img src="' + Helioviewer.api + '?action=takeScreenshot'
                      +     '&imageScale=' + thumbImageScale
                      +     '&layers='    + imageLayer
-                     +     '&events=&eventLabels=false'
+                     +     '&event_selections=&eventLabels=false'
                      +     '&scale=false&scaleType=earth&scaleX=0&scaleY=0'
                      +     '&date='      + endDate
                      +     '&x1=' + x1
@@ -1995,7 +1995,7 @@ var HelioviewerWebClient = HelioviewerClient.extend(
         var url = Helioviewer.api + '?action=takeScreenshot'
                      +     '&imageScale=' + thumbImageScale
                      +     '&layers='    + imageLayer.slice(0, -1)
-                     +     '&events=&eventLabels=false'
+                     +     '&event_selections=&eventLabels=false'
                      +     '&scale=false&scaleType=earth&scaleX=0&scaleY=0'
                      +     '&date='      + date
                      +     '&x1=' + x1
