@@ -155,7 +155,6 @@ export default class EventLoader {
 
     return result;
   }
-
 }
 
 export { EventLoader };
